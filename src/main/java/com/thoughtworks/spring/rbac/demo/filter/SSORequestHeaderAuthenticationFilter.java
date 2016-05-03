@@ -1,4 +1,4 @@
-package com.thoughtworks.spring.rbac.demo.config;
+package com.thoughtworks.spring.rbac.demo.filter;
 
 import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
 

@@ -1,5 +1,6 @@
 package com.thoughtworks.spring.rbac.demo.config;
 
+import com.thoughtworks.spring.rbac.demo.filter.SSORequestHeaderAuthenticationFilter;
 import com.thoughtworks.spring.rbac.demo.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

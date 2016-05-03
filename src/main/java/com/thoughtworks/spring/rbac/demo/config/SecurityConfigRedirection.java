@@ -1,5 +1,6 @@
 package com.thoughtworks.spring.rbac.demo.config;
 
+import com.thoughtworks.spring.rbac.demo.filter.W3AuthenticationFilter;
 import com.thoughtworks.spring.rbac.demo.service.W3UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -38,9 +39,10 @@ public class SecurityConfigRedirection extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic()
-                .authenticationEntryPoint(new LinkForbiddenEntryPoint())
-                .and()
+//                .addFilter(new SimpleAuthenticationFilter())
+//                .httpBasic()
+//                .authenticationEntryPoint(new LinkForbiddenEntryPoint())
+//                .and()
                 .addFilter(getW3AuthenticationFilter())
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
 
