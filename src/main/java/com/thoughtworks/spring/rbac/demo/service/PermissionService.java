@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PermissionService {
+
     public boolean check(User currentUser, String id) {
+
         System.err.println(currentUser);
         System.err.println(id);
         return false;
