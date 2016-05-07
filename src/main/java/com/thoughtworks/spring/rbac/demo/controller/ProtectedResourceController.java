@@ -5,12 +5,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/protected")
 public class ProtectedResourceController {
 
     @RequestMapping("/{id}")
-    public Message getOne(@PathVariable("id") String id) {
-        return new Message("Protected resource");
+    public Message getOne(Principal principal, @PathVariable("id") String id) {
+        return new Message("Protected resource for: "+principal.getName());
     }
 }

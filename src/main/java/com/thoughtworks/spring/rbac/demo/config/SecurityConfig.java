@@ -1,12 +1,16 @@
 package com.thoughtworks.spring.rbac.demo.config;
 
-import com.thoughtworks.spring.rbac.demo.filter.AuthenticationFilter;
+import com.thoughtworks.spring.rbac.demo.filter.KanBanPreAuthenticationFilter;
+import com.thoughtworks.spring.rbac.demo.service.KanBanAuthenticationUserDetailsService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,7 +18,17 @@ import org.springframework.stereotype.Component;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public static final String SSO_URL = "http://localhost:8100/sso";
+    @Override
+    protected void configure(AuthenticationManagerBuilder builder) throws Exception {
+        builder.authenticationProvider(preAuthenticationProvider());
+    }
+
+    private AuthenticationProvider preAuthenticationProvider() {
+        PreAuthenticatedAuthenticationProvider provider = new PreAuthenticatedAuthenticationProvider();
+        provider.setPreAuthenticatedUserDetailsService(new KanBanAuthenticationUserDetailsService());
+
+        return provider;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -26,10 +40,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(new W3LoginEntryPoint(SSO_URL));
+                .authenticationEntryPoint(new RestAuthenticationEntryPoint());
 
-        http.addFilterBefore(new AuthenticationFilter(authenticationManager()),
-                UsernamePasswordAuthenticationFilter.class);
+        http.addFilter(getHeaderAuthenticationFilter());
+    }
+
+    @Bean
+    public KanBanPreAuthenticationFilter getHeaderAuthenticationFilter() throws Exception {
+        KanBanPreAuthenticationFilter filter = new KanBanPreAuthenticationFilter();
+
+        filter.setAuthenticationManager(authenticationManager());
+
+        return filter;
     }
 
 }
