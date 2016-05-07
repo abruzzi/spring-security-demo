@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.AuthenticationUserDetailsSe
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import org.springframework.util.StringUtils;
 
 public class KanBanAuthenticationUserDetailsService
         implements AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
@@ -13,7 +14,8 @@ public class KanBanAuthenticationUserDetailsService
     @Override
     public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken token) throws UsernameNotFoundException {
         String principal = (String) token.getPrincipal();
-        if(principal != null) {
+
+        if(!StringUtils.isEmpty(principal)) {
             return new KanBanUserDetails(new KanBanUser(principal));
         }
 

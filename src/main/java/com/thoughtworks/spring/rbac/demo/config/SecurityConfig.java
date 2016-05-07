@@ -43,16 +43,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint(new RestAuthenticationEntryPoint());
 
-        http.addFilter(getHeaderAuthenticationFilter());
+        http.addFilter(headerAuthenticationFilter());
     }
 
     @Bean
-    public KanBanPreAuthenticationFilter getHeaderAuthenticationFilter() throws Exception {
-        KanBanPreAuthenticationFilter filter = new KanBanPreAuthenticationFilter();
-
-        filter.setAuthenticationManager(authenticationManager());
-
-        return filter;
+    public KanBanPreAuthenticationFilter headerAuthenticationFilter() throws Exception {
+        return new KanBanPreAuthenticationFilter(authenticationManager());
     }
 
 }
